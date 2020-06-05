@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { addUrl } from '../../apiCalls';
 
 class UrlForm extends Component {
   constructor(props) {
@@ -16,7 +17,16 @@ class UrlForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    this.addNewUrl();
     this.clearInputs();
+  }
+
+  addNewUrl = () => {
+    addUrl(this.state)
+      .then(data => {
+        this.props.updateUrls(data)
+      })
+      .catch(error => console.log(error.message));
   }
 
   clearInputs = () => {
