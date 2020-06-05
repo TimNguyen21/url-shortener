@@ -22,8 +22,13 @@ export class App extends Component {
       .catch(error => console.log(error.message));
   }
 
-  updateUrlsList = (newUrl) => {
-    this.setState({urls: [...this.state.urls, newUrl]})
+  addNewUrl = (newUrl) => {
+    const currentUrls = this.state.urls;
+    addUrl(newUrl)
+      .then(data => {
+        this.setState({urls: [...this.state.urls, data]})
+      })
+      .catch(error => console.log(error.message));
   }
 
   render = () => {
@@ -31,7 +36,7 @@ export class App extends Component {
       <main className="App">
         <header>
           <h1>URL Shortener</h1>
-          <UrlForm updateUrls={this.updateUrlsList}/>
+          <UrlForm addNewUrl={this.addNewUrl}/>
         </header>
         <UrlContainer urls={this.state.urls}/>
       </main>
