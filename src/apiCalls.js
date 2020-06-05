@@ -15,3 +15,9 @@ export const addUrl = async (newUrl) => {
   )
     .then(response => response.json())
 }
+
+export const deleteUrl = async (id) => {
+  return await fetch('http://localhost:3001/api/v1/urls/'+id, {
+    method: 'DELETE'
+  })
+}

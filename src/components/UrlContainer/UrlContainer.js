@@ -10,6 +10,9 @@ const UrlContainer = props => {
         <a href={url.short_url} target="blank">{url.short_url}</a>
         <h4>Original Link:</h4>
         <p>{url.long_url}</p>
+        <button onClick={() => props.deleteUrl(url.id)}>
+          Delete URL
+        </button>
       </div>
     )
   });

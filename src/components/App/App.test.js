@@ -3,7 +3,7 @@ import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react/';
 import "@testing-library/jest-dom";
 import App from './App.js';
-import { getUrls, addUrl } from '../../apiCalls';
+import { getUrls, addUrl, deleteUrl } from '../../apiCalls';
 jest.mock('../../apiCalls.js');
 
 describe("UrlForm", () => {
@@ -20,6 +20,8 @@ describe("UrlForm", () => {
       short_url: "shorter URL",
       title: "Cats"
     })
+
+    deleteUrl.mockResolvedValue({})
   })
 
   it("should display the correct labels", () => {
@@ -78,4 +80,28 @@ describe("UrlForm", () => {
     expect(shortUrl).toBeInTheDocument();
   })
 
+  it('should remove url and display no url message', async () => {
+    const { getByText } = render(<App/>)
+
+    const title = await waitFor(() => getByText("Dogs"))
+    const longUrl = await waitFor(() => getByText("this is longgg"));
+    const shortUrl = await waitFor(() => getByText("this is short"));
+    const deleteButton = await waitFor(() => getByText("Delete URL"))
+
+    expect(title).toBeInTheDocument();
+    expect(longUrl).toBeInTheDocument();
+    expect(shortUrl).toBeInTheDocument();
+    expect(deleteButton).toBeInTheDocument();
+
+    fireEvent.click(deleteButton)
+
+    expect(title).not.toBeInTheDocument();
+    expect(longUrl).not.toBeInTheDocument();
+    expect(shortUrl).not.toBeInTheDocument();
+    expect(deleteButton).not.toBeInTheDocument();
+
+    const noUrlMessage = await waitFor(()=> getByText("No urls yet! Find some to shorten!"))
+
+    expect(noUrlMessage).toBeInTheDocument();
+  })
 })
