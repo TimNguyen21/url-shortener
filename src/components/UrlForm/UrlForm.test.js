@@ -54,4 +54,32 @@ describe("UrlForm", () => {
     expect(urlInput.value).toBe("http://www.example.com/111")
   })
 
+  it("should have submit button disable when input fields are empty", async () => {
+    const addUrl = jest.fn();
+
+    const { getByPlaceholderText, getByRole } = render(<UrlForm
+        updateUrls={addUrl}
+      />)
+
+    const titleInput = getByPlaceholderText("Title...");
+    const urlInput = getByPlaceholderText("URL to Shorten...");
+    const submitButton = getByRole("button", {name: 'Shorten Please!'});
+
+    expect(titleInput).not.toHaveValue()
+    expect(urlInput).not.toHaveValue()
+    expect(submitButton).toBeDisabled()
+
+    fireEvent.change(titleInput, {target: {value: "Cats"}});
+
+    expect(submitButton).toBeDisabled()
+    expect(titleInput.value).toBe("Cats")
+    expect(urlInput.value).toBe("")
+
+    fireEvent.change(urlInput, {target: {value: "http://www.example.com/111"}});
+
+    expect(submitButton).toBeEnabled()
+    expect(titleInput.value).toBe("Cats")
+    expect(urlInput.value).toBe("http://www.example.com/111")
+  })
+
 })

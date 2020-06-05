@@ -24,6 +24,10 @@ class UrlForm extends Component {
     this.setState({title: '', urlToShorten: ''});
   }
 
+  validInputCheck = () => {
+    return !this.state.title || !this.state.urlToShorten
+  }
+
   render() {
     return (
       <form>
@@ -43,7 +47,10 @@ class UrlForm extends Component {
           onChange={e => this.handleNameChange(e)}
         />
 
-        <button onClick={e => this.handleSubmit(e)}>
+        <button
+          onClick={e => this.handleSubmit(e)}
+          disabled={this.validInputCheck()}
+        >
           Shorten Please!
         </button>
       </form>

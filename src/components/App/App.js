@@ -8,7 +8,8 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      urls: []
+      urls: [],
+      error: ''
     }
   }
 
@@ -19,7 +20,14 @@ export class App extends Component {
   setUrls = () => {
     getUrls()
       .then(data => this.setState({urls: data.urls}))
-      .catch(error => console.log(error.message));
+      .catch(error => {
+        if(error.message === "Failed to fetch") {
+          this.setState({error: "Please connect to API Source"})
+        } else {
+          console.log(error.message)
+        }
+      }
+    );
   }
 
   addNewUrl = (newUrl) => {
@@ -33,9 +41,18 @@ export class App extends Component {
   deleteUrl = (id) => {
     const updateUrl = this.state.urls.filter(url => url.id !== id);
     this.setState({urls: updateUrl});
-    
+
     deleteUrl(id)
       .catch(error => console.log(error.message))
+  }
+
+  apiCheck = () => {
+    if(!this.state.error) {
+      return (<section><UrlForm addNewUrl={this.addNewUrl}/>
+        <UrlContainer urls={this.state.urls} deleteUrl={this.deleteUrl}/></section>)
+    } else {
+      return this.state.error
+    }
   }
 
   render = () => {
@@ -43,9 +60,8 @@ export class App extends Component {
       <main className="App">
         <header>
           <h1>URL Shortener</h1>
-          <UrlForm addNewUrl={this.addNewUrl}/>
         </header>
-        <UrlContainer urls={this.state.urls} deleteUrl={this.deleteUrl}/>
+        {this.apiCheck()}
       </main>
     );
   }
