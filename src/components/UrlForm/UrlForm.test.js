@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react/';
+import { render, fireEvent, waitFor } from '@testing-library/react/';
 import "@testing-library/jest-dom";
 import UrlForm from './UrlForm.js';
 import { getUrls } from '../../apiCalls';
@@ -16,8 +16,10 @@ describe("UrlForm", () => {
   })
 
   it("should display the correct labels", () => {
+    const addUrl = jest.fn();
+
     const { getByPlaceholderText, getByText } = render(<UrlForm
-        updateUrls={jest.fn()}
+        updateUrls={addUrl}
       />)
 
     const titleLabel = getByPlaceholderText("Title...")
@@ -29,7 +31,7 @@ describe("UrlForm", () => {
     expect(submitButton).toBeInTheDocument();
   })
 
-  it("should send the correct data to updateUrls", () => {
+  it("should send the correct data to updateUrls", async () => {
     const addUrl = jest.fn();
 
     const { getByPlaceholderText, getByRole } = render(<UrlForm

@@ -23,7 +23,6 @@ export class App extends Component {
   }
 
   addNewUrl = (newUrl) => {
-    const currentUrls = this.state.urls;
     addUrl(newUrl)
       .then(data => {
         this.setState({urls: [...this.state.urls, data]})
